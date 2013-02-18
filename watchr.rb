@@ -1,4 +1,4 @@
-watch(%r{(spec|lib)/(.*/)*.+\.rb}) do
+watch('(.+/)*.*\.rb') do
   system 'clear'
   system 'rake test'
 end
