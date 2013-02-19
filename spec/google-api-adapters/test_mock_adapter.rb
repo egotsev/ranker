@@ -23,6 +23,8 @@ describe MockDocument do
   it "allows access and edit of cells by index" do
     @document[1,1] = "value123"
     @document[1,1].must_equal "value123"
+    @document[3,3] = "new value"
+    @document[3,3].must_equal "new value"
   end
 
   it "has methods save and reload (from Drive)" do
@@ -43,5 +45,19 @@ describe MockDocument do
 
   it "has a rows method" do
     @document.rows.must_be_instance_of Array
+  end
+
+  it "returns empty strings for empty cells" do
+    @document[1,1].must_equal ''
+    @document[2,3].must_equal ''
+  end
+
+  it "allows adding new rows" do
+    @document.add_row "12", "24", "string"
+    @document[1,1].must_equal "12"
+    @document[1,2].must_equal "24"
+    @document[1,3].must_equal "string"
+    @document.add_row 1234
+    @document[2,1].must_equal 1234
   end
 end

@@ -21,9 +21,9 @@ describe DocumentManager do
     doc_manager.tests.any? { |test| test.date == date_time }.must_equal true
   end
 
-  it "has method to set the document for bonus points" do
-    doc_manager.bonus_points_document.must_be_nil
-    doc_manager.set_bonus_points_document "/url/bonuspoints"
-    doc_manager.bonus_points_document.url.must_equal "/url/bonuspoints"
+  it "has method to set the document for bonus codes" do
+    doc_manager.bonus_codes_document.must_be_nil
+    doc_manager.set_bonus_codes_document "/url/bonuspoints"
+    doc_manager.bonus_codes_document.url.must_equal "/url/bonuspoints"
   end
 end

@@ -1,5 +1,5 @@
 class DocumentManager
-  attr_reader :homeworks, :tests, :bonus_points_document
+  attr_reader :homeworks, :tests, :bonus_codes_document
 
   def initialize(session)
     @session = session
@@ -15,7 +15,7 @@ class DocumentManager
     @tests << TestDocument.new(@session.get_document_by_url(url), test_date)
   end
 
-  def set_bonus_points_document(url)
-    @bonus_points_document = BonusPointsDocument.new(@session.get_document_by_url(url))
+  def set_bonus_codes_document(url)
+    @bonus_codes_document = BonusCodesDocument.new(@session.get_document_by_url(url))
   end
 end

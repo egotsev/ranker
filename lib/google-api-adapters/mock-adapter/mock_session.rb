@@ -9,14 +9,16 @@ class MockDocument
 
   def initialize(url)
     @url = url
-    @cells = [[],[]]
+    @cells = []
   end
 
   def [](row, col)
-    @cells[row - 1][col - 1]
+    @cells[row - 1] ||= []
+    @cells[row - 1][col - 1] || ''
   end
 
   def []=(row, col, value)
+    @cells[row - 1] ||= []
     @cells[row - 1][col - 1] = value
     @dirty = true
   end
@@ -35,5 +37,9 @@ class MockDocument
 
   def dirty?
     @dirty
+  end
+
+  def add_row(*args)
+    @cells << args
   end
 end
