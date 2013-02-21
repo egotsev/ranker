@@ -182,3 +182,44 @@ describe RanklistDocument do
     ranklist.participant('11a', 11).points.must_equal 10
   end
 end
+
+describe SubmittedBonusCodesDocument do
+  let (:session) { SessionFactory.create_mock_session }
+  let (:document) { SubmittedBonusCodesDocument.new session.get_document_by_url("/url/") }
+
+  it "has method to return all submissions" do
+    document.must_respond_to :submissions
+    document.submissions.must_be_instance_of Array
+  end
+
+  it "has method to add submission" do
+    document.submit_code "LE CODE", klass: '11a', number: 11
+    document.submissions.first.code.must_equal "LE CODE"
+    document.submissions.first.klass.must_equal "11a"
+    document.submissions.first.number.must_equal 11
+    document.submissions.first.checked.must_equal false
+  end
+
+
+  it "has method to check submission" do
+    document.submit_code "LE CODE", klass: '11a', number: 11
+    document.check_submission document.submissions.first
+    document.submissions.first.checked.must_equal true
+  end
+
+  it "returns all not checked submissions" do
+    document.submit_code "LE CODE", klass: '11a', number: 11
+    document.submit_code "LE CODED", klass: '11a', number: 12
+    document.check_submission document.submissions.first
+    document.not_checked_submissions.must_include document.submissions[1]
+    document.not_checked_submissions.wont_include document.submissions[0]
+  end
+
+  describe SubmittedBonusCodesDocument::Submission do
+    it "implements correct eql? and == operators" do
+      document.submit_code "LE CODE", klass: '11a', number: 11
+      document.submissions.first == document.submissions.first
+      document.submissions.first.eql? document.submissions.first
+    end
+  end
+end

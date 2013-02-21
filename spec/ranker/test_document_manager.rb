@@ -31,4 +31,10 @@ describe DocumentManager do
     doc_manager.set_ranklist_document "/url/ranklist"
     doc_manager.ranklist_document.url.must_equal "/url/ranklist"
   end
+
+  it "has method to set the submitted bonus code document" do
+    doc_manager.submitted_bonus_codes_document.must_be_nil
+    doc_manager.set_submitted_bonus_codes_document "/url/submittedbonuscodes"
+    doc_manager.submitted_bonus_codes_document.url.must_equal "/url/submittedbonuscodes"
+  end
 end

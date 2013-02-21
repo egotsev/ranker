@@ -1,5 +1,5 @@
 class DocumentManager
-  attr_reader :homeworks, :tests, :bonus_codes_document, :ranklist_document
+  attr_reader :homeworks, :tests, :bonus_codes_document, :ranklist_document, :submitted_bonus_codes_document
 
   def initialize(session)
     @session = session
@@ -21,5 +21,9 @@ class DocumentManager
 
   def set_ranklist_document(url)
     @ranklist_document = RanklistDocument.new(@session.get_document_by_url(url))
+  end
+
+  def set_submitted_bonus_codes_document(url)
+    @submitted_bonus_codes_document = SubmittedBonusCodesDocument.new(@session.get_document_by_url(url))
   end
 end
