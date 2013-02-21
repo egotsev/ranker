@@ -58,6 +58,6 @@ describe MockDocument do
     @document[1,2].must_equal "24"
     @document[1,3].must_equal "string"
     @document.add_row 1234
-    @document[2,1].must_equal 1234
+    @document[2,1].must_equal "1234"
   end
 end

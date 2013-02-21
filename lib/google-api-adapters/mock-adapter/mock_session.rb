@@ -19,7 +19,7 @@ class MockDocument
 
   def []=(row, col, value)
     @cells[row - 1] ||= []
-    @cells[row - 1][col - 1] = value
+    @cells[row - 1][col - 1] = value.to_s
     @dirty = true
   end
 
@@ -40,6 +40,6 @@ class MockDocument
   end
 
   def add_row(*args)
-    @cells << args
+    @cells << args.map { |arg| arg.to_s }
   end
 end

@@ -9,7 +9,6 @@ describe DocumentManager do
   let (:date_time) { DateTime.now }
   
   it "has method to create homework document from url" do
-    
     doc_manager.add_homework_document "url", date_time
     doc_manager.homeworks.any? { |homework| homework.url == "url" }.must_equal true
     doc_manager.homeworks.any? { |homework| homework.due_date == date_time }.must_equal true
@@ -25,5 +24,11 @@ describe DocumentManager do
     doc_manager.bonus_codes_document.must_be_nil
     doc_manager.set_bonus_codes_document "/url/bonuspoints"
     doc_manager.bonus_codes_document.url.must_equal "/url/bonuspoints"
+  end
+
+  it "has method to set the ranklist document" do
+    doc_manager.ranklist_document.must_be_nil
+    doc_manager.set_ranklist_document "/url/ranklist"
+    doc_manager.ranklist_document.url.must_equal "/url/ranklist"
   end
 end
