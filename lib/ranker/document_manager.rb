@@ -26,4 +26,12 @@ class DocumentManager
   def set_submitted_bonus_codes_document(url)
     @submitted_bonus_codes_document = SubmittedBonusCodesDocument.new(@session.get_document_by_url(url))
   end
+
+  def generate_bonus_codes(count)
+    @bonus_codes_document.generate_new_codes count
+  end
+
+  def generate_bonus_codes_if_nothing_left(count)
+    @bonus_codes_document.generate_if_nothing_left count
+  end
 end
