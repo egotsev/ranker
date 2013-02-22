@@ -81,6 +81,10 @@ class TestDocument < Document
     submissions.empty? ? nil : Submission.new(*submissions[0])
   end
 
+  def submissions
+    @spreadsheet.rows.map { |row| Submission.new *row }
+  end
+
   class Submission
     attr_reader :datetime, :klass, :number, :name
 

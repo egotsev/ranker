@@ -41,6 +41,18 @@ describe DocumentManager, "setters and constructor" do
     doc_manager.set_submitted_bonus_codes_document "/url/submittedbonuscodes"
     doc_manager.submitted_bonus_codes_document.url.must_equal "/url/submittedbonuscodes"
   end
+
+  it "returns test document for given url" do
+    doc_manager.add_test_document "/url?test=true", date_time
+    doc_manager.get_test_document("/url?test=true").url.must_equal "/url?test=true"
+    doc_manager.tests.must_include doc_manager.get_test_document("/url?test=true")
+  end
+
+  it "returns homework document for gicev url" do
+    doc_manager.add_homework_document "/url?hw=true", date_time
+    doc_manager.get_homework_document("/url?hw=true").url.must_equal "/url?hw=true"
+    doc_manager.homeworks.must_include doc_manager.get_homework_document("/url?hw=true")
+  end
 end
 
 describe DocumentManager, "functionality" do
@@ -106,9 +118,13 @@ describe DocumentManager, "functionality" do
 #  
 #  end
 
-#  it "checks test document and gives 10 points to those who has 'yes'" do
-#  
-#  end
+  it "checks test document and gives 10 points to those who has 'yes'" do
+    @document_manager.add_test_document "/url/test1", Date.new(2013,2,22)
+    @test1_document = @document_manager.get_test_document "/url/test1"
+    @test1_document.add_submission DateTime.now, '11a', 1, "Alex A.", CommonConstants::YES
+    @document_manager.check_test_results "/url/test1"
+    @document_manager.ranklist_document.participant('11a', 1).points.must_equal 10
+  end
 
 #  it "checks test document and doesn't give points to those who has 'no'" do
 #  

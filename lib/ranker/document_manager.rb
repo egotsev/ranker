@@ -7,6 +7,14 @@ class DocumentManager
     @tests = []
   end
 
+  def get_test_document(url)
+    @tests.select { |test| test.url == url }.first
+  end
+
+  def get_homework_document(url)
+    @homeworks.select { |homework| homework.url == url }.first
+  end
+
   def add_homework_document(url, due_date)
     @homeworks << HomeworkDocument.new(@session.get_document_by_url(url), due_date)
   end
@@ -42,6 +50,14 @@ class DocumentManager
         @ranklist_document.increment_points_of submission.klass, submission.number
       end
       @submitted_bonus_codes_document.check_submission submission
+    end
+  end
+
+  def check_test_results(url)
+    get_test_document(url).submissions.each do |submission|
+      if submission.passed?
+        @ranklist_document.add_points_to_student 10, klass: submission.klass, number: submission.number
+      end
     end
   end
 end

@@ -49,11 +49,12 @@ end
 describe TestDocument do
   let (:session) { SessionFactory.create_mock_session }
   let (:date_time) { DateTime.new(2013, 2, 28, 9, 45, 34) }
-  let (:document) { TestDocument.new session.get_document_by_url("/url/"), date_time }
+  let (:date) { Date.new(2013, 2, 28) }
+  let (:document) { TestDocument.new session.get_document_by_url("/url/"), date }
 
   it "has correct parameters" do
     document.url.must_equal "/url/"
-    document.date.must_equal date_time
+    document.date.must_equal date
   end
 
   it "has correctly working method to add submission" do
