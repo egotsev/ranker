@@ -126,8 +126,12 @@ describe DocumentManager, "functionality" do
     @document_manager.ranklist_document.participant('11a', 1).points.must_equal 10
   end
 
-#  it "checks test document and doesn't give points to those who has 'no'" do
-#  
-#  end
+  it "checks test document and doesn't give points to those who has 'no'" do
+    @document_manager.add_test_document "/url/test1", Date.new(2013,2,22)
+    @test1_document = @document_manager.get_test_document "/url/test1"
+    @test1_document.add_submission DateTime.now, '11a', 1, "Alex A.", CommonConstants::NO
+    @document_manager.check_test_results "/url/test1"
+    @document_manager.ranklist_document.participant('11a', 1).points.must_equal 0
+  end
 
 end
