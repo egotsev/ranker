@@ -13,9 +13,10 @@ describe DocumentManager, "setters and constructor" do
   let (:date_time) { DateTime.now }
   
   it "has method to create homework document from url" do
-    doc_manager.add_homework_document "url", date_time
+    doc_manager.add_homework_document "url", 6, date_time
     doc_manager.homeworks.any? { |homework| homework.url == "url" }.must_equal true
     doc_manager.homeworks.any? { |homework| homework.due_date == date_time }.must_equal true
+    doc_manager.homeworks.any? { |homework| homework.points == 6 }.must_equal true
   end
 
   it "has method to add existing test document" do
@@ -48,8 +49,8 @@ describe DocumentManager, "setters and constructor" do
     doc_manager.tests.must_include doc_manager.get_test_document("/url?test=true")
   end
 
-  it "returns homework document for gicev url" do
-    doc_manager.add_homework_document "/url?hw=true", date_time
+  it "returns homework document for givev url" do
+    doc_manager.add_homework_document "/url?hw=true", 10, date_time
     doc_manager.get_homework_document("/url?hw=true").url.must_equal "/url?hw=true"
     doc_manager.homeworks.must_include doc_manager.get_homework_document("/url?hw=true")
   end
@@ -110,13 +111,25 @@ describe DocumentManager, "functionality" do
     @document_manager.ranklist_document.participant('11a', 1).points.must_equal 1
   end
 
-#  it "checks homeworks and gives points to the guys that have submitted ontime" do
-#
-#  end
+  it "checks homeworks and gives points to the guys that have submitted ontime" do
+    @document_manager.add_homework_document "/url/hw2", 6, DateTime.new(2013, 2, 20, 20, 0, 0)
+    homework2_document = @document_manager.get_homework_document "/url/hw2"
+    homework2_document.add_submission DateTime.new(2013, 2, 19, 19, 59, 59), '11a', 1, 'Alex A.', 'http://github.com/alex_a/hw2'
+    homework2_document.add_submission DateTime.new(2013, 2, 20, 20, 0, 0), '11a', 2, 'Ivan I.', 'http://github.com/ivan_i/hw2'
+    @document_manager.check_homework "/url/hw2"
+    @document_manager.ranklist_document.participant('11a', 1).points.must_equal 6
+    @document_manager.ranklist_document.participant('11a', 2).points.must_equal 6
+  end
 
-#  it "checks homeworks and doesn't give points to the guys that haven't submitted ontime" do
-#  
-#  end
+  it "checks homeworks and doesn't give points to the guys that haven't submitted ontime" do
+    @document_manager.add_homework_document "/url/hw2", 6, DateTime.new(2013, 2, 20, 20, 0, 0)
+    homework2_document = @document_manager.get_homework_document "/url/hw2"
+    homework2_document.add_submission DateTime.new(2013, 2, 21, 10, 59, 59), '11a', 1, 'Alex A.', 'http://github.com/alex_a/hw2'
+    homework2_document.add_submission DateTime.new(2013, 2, 20, 20, 0, 1), '11a', 2, 'Ivan I.', 'http://github.com/ivan_i/hw2'
+    @document_manager.check_homework "/url/hw2"
+    @document_manager.ranklist_document.participant('11a', 1).points.must_equal 0
+    @document_manager.ranklist_document.participant('11a', 2).points.must_equal 0
+  end
 
   it "checks test document and gives 10 points to those who has 'yes'" do
     @document_manager.add_test_document "/url/test1", Date.new(2013,2,22)
@@ -133,5 +146,4 @@ describe DocumentManager, "functionality" do
     @document_manager.check_test_results "/url/test1"
     @document_manager.ranklist_document.participant('11a', 1).points.must_equal 0
   end
-
 end

@@ -12,10 +12,11 @@ class Document
 end
 
 class HomeworkDocument < Document
-  attr_reader :due_date
+  attr_reader :due_date, :points
 
-  def initialize(spreadsheet, due_date)
+  def initialize(spreadsheet, points, due_date)
     super(spreadsheet)
+    @points = points
     @due_date = due_date
   end
 
@@ -35,7 +36,7 @@ class HomeworkDocument < Document
     @spreadsheet.rows.any? { |row| row[1] == klass and row[2] == number.to_s and DateUtils.string_to_date(row[0]) <= @due_date }
   end
 
-  def all_submissions_ontime
+  def ontime_submissions
     @spreadsheet.reload
     @spreadsheet.rows.select { |row| DateUtils.string_to_date(row[0]) <= @due_date }.map { |row| Submission.new *row }
   end

@@ -15,8 +15,8 @@ class DocumentManager
     @homeworks.select { |homework| homework.url == url }.first
   end
 
-  def add_homework_document(url, due_date)
-    @homeworks << HomeworkDocument.new(@session.get_document_by_url(url), due_date)
+  def add_homework_document(url, points, due_date)
+    @homeworks << HomeworkDocument.new(@session.get_document_by_url(url), points, due_date)
   end
 
   def add_test_document(url, test_date)
@@ -58,6 +58,13 @@ class DocumentManager
       if submission.passed?
         @ranklist_document.add_points_to_student 10, klass: submission.klass, number: submission.number
       end
+    end
+  end
+
+  def check_homework(url)
+    homework = get_homework_document(url)
+    homework.ontime_submissions.each do |submission|
+      @ranklist_document.add_points_to_student homework.points, klass: submission.klass, number: submission.number
     end
   end
 end

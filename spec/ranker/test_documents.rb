@@ -3,11 +3,12 @@ require 'spec_helper'
 describe HomeworkDocument do
   let (:session) { SessionFactory.create_mock_session }
   let (:date_time) { DateTime.new(2013, 2, 1, 20, 0, 0, '+2') }
-  let (:homework) { HomeworkDocument.new session.get_document_by_url("/url/"), date_time }
+  let (:homework) { HomeworkDocument.new session.get_document_by_url("/url/"), 6, date_time }
 
   it "has correct parameters" do
     homework.url.must_equal "/url/"
     homework.due_date.must_equal date_time
+    homework.points.must_equal 6
   end
 
   it "has method to submit homework" do
@@ -40,9 +41,9 @@ describe HomeworkDocument do
     homework.add_submission DateTime.new(2013, 1, 31, 20, 0, 0, '+2'), '11b', 17, 'John Johns', 'https://github.com/link/to/rep'
     homework.add_submission DateTime.now, '11a', 10, 'Someone Interesting', 'https://bitbucket.com/interesting/repo'
     homework.add_submission DateTime.now, '11a', 11, 'Someone Interest', 'https://bitbucket.com/interesting/rep'
-    homework.all_submissions_ontime.size.must_equal 2
-    homework.all_submissions_ontime.one? { |submission| submission.klass == '11b' and submission.number == 18 }.must_equal true
-    homework.all_submissions_ontime.one? { |submission| submission.klass == '11b' and submission.number == 17 }.must_equal true
+    homework.ontime_submissions.size.must_equal 2
+    homework.ontime_submissions.one? { |submission| submission.klass == '11b' and submission.number == 18 }.must_equal true
+    homework.ontime_submissions.one? { |submission| submission.klass == '11b' and submission.number == 17 }.must_equal true
   end
 end
 
