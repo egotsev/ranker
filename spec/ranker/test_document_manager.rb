@@ -47,6 +47,8 @@ describe DocumentManager, "functionality" do
   before do
     @document_manager = DocumentManager.new SessionFactory.create_mock_session
     @document_manager.set_ranklist_document "/url/ranklist"
+    @document_manager.ranklist_document.add_or_update_student '11a', 1, "Alex A."
+    @document_manager.ranklist_document.add_or_update_student '11a', 2, "Ivan I."
     @document_manager.set_bonus_codes_document "/url/bonuscodes"
     @document_manager.set_submitted_bonus_codes_document "/url/submittedbonuscodes"
   end
@@ -67,9 +69,34 @@ describe DocumentManager, "functionality" do
     @document_manager.bonus_codes_document.unused_codes_number.must_equal 10  
   end
 
-#  it "checks for new submissions of bonus codes and adds points" do
-#  
-#  end
+  it "checks for new submissions of bonus codes and adds points when there are matches" do
+    @document_manager.generate_bonus_codes 1
+    code = @document_manager.bonus_codes_document.valid_codes.first
+    @document_manager.submitted_bonus_codes_document.submit_code code, klass: '11a', number: 1
+    @document_manager.check_new_bonus_codes_submissions
+    @document_manager.bonus_codes_document.unused_codes_number.must_equal 0
+    @document_manager.ranklist_document.participant('11a', 1).points.must_equal 1
+    @document_manager.submitted_bonus_codes_document.not_checked_submissions.size.must_equal 0
+  end
+
+  it "checks for new submission of bonus codes and doesn't add points when there is no match" do
+    @document_manager.generate_bonus_codes 2
+    @document_manager.submitted_bonus_codes_document.submit_code "LE FAKE CODE", klass: '11a', number: 2
+    @document_manager.check_new_bonus_codes_submissions
+    @document_manager.bonus_codes_document.unused_codes_number.must_equal 2
+    @document_manager.ranklist_document.participant('11a', 2).points.must_equal 0
+    @document_manager.submitted_bonus_codes_document.not_checked_submissions.size.must_equal 0
+  end
+
+  it "doesn't give points on second check for submitted bonus codes" do
+    @document_manager.generate_bonus_codes 2
+    code = @document_manager.bonus_codes_document.valid_codes.first
+    @document_manager.submitted_bonus_codes_document.submit_code code, klass: '11a', number: 1
+    @document_manager.check_new_bonus_codes_submissions
+    @document_manager.ranklist_document.participant('11a', 1).points.must_equal 1
+    @document_manager.check_new_bonus_codes_submissions
+    @document_manager.ranklist_document.participant('11a', 1).points.must_equal 1
+  end
 
 #  it "checks homeworks and gives points to the guys that have submitted ontime" do
 #
@@ -79,7 +106,7 @@ describe DocumentManager, "functionality" do
 #  
 #  end
 
-#  it "checks test document and gives 10 points to thos who has 'yes'" do
+#  it "checks test document and gives 10 points to those who has 'yes'" do
 #  
 #  end
 

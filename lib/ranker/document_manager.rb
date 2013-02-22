@@ -34,4 +34,14 @@ class DocumentManager
   def generate_bonus_codes_if_nothing_left(count)
     @bonus_codes_document.generate_if_nothing_left count
   end
+
+  def check_new_bonus_codes_submissions
+    @submitted_bonus_codes_document.not_checked_submissions.each do |submission|
+      if @bonus_codes_document.valid? submission.code
+        @bonus_codes_document.use_code submission.code
+        @ranklist_document.increment_points_of submission.klass, submission.number
+      end
+      @submitted_bonus_codes_document.check_submission submission
+    end
+  end
 end
