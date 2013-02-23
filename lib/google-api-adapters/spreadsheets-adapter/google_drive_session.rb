@@ -32,7 +32,7 @@ class GoogleDriveSpreadsheet
   end
 
   def save
-    @worksheet.reload
+    @worksheet.save
   end
 
   def dirty?
@@ -41,6 +41,6 @@ class GoogleDriveSpreadsheet
 
   def add_row(*args)
     row = @worksheet.num_rows + 1
-    @worksheet.update_cells(row, args.size, [args])
+    args.size.times { |i| @worksheet[row, i + 1] = args[i] }
   end
 end
