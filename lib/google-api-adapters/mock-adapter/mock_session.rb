@@ -1,10 +1,10 @@
 class MockSession
   def get_document_by_url(url)
-    MockDocument.new url
+    MockSpreadsheet.new url
   end
 end
 
-class MockDocument
+class MockSpreadsheet
   attr_reader :url
 
   def initialize(url)

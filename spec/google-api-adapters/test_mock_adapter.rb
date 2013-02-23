@@ -9,12 +9,12 @@ describe MockSession do
   it "creates MockDocument instances correctly" do
     session = SessionFactory.create_mock_session
     document = session.get_document_by_url "/url/"
-    document.must_be_instance_of MockDocument
+    document.must_be_instance_of MockSpreadsheet
     document.url.must_equal "/url/"
   end
 end
 
-describe MockDocument do
+describe MockSpreadsheet do
   before do
     @session = SessionFactory.create_mock_session
     @document = @session.get_document_by_url "/url/"

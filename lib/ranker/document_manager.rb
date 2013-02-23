@@ -1,3 +1,5 @@
+require_relative 'documents'
+
 class DocumentManager
   attr_reader :homeworks, :tests, :bonus_codes_document, :ranklist_document, :submitted_bonus_codes_document
 
@@ -66,5 +68,9 @@ class DocumentManager
     homework.ontime_submissions.each do |submission|
       @ranklist_document.add_points_to_student homework.points, klass: submission.klass, number: submission.number
     end
+  end
+
+  def load_from_file(path)
+  
   end
 end

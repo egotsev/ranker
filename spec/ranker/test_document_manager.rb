@@ -146,4 +146,12 @@ describe DocumentManager, "functionality" do
     @document_manager.check_test_results "/url/test1"
     @document_manager.ranklist_document.participant('11a', 1).points.must_equal 0
   end
+
+  it "initializes from file" do
+    assert false
+  end
+
+  it "serializes to file" do
+    assert false
+  end
 end

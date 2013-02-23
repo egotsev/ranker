@@ -73,6 +73,18 @@ describe TestDocument do
     submission.name.must_equal 'Ivan Ivanov'
     submission.passed?.must_equal false
   end
+
+  it "gives all submissions" do
+    document.add_submission DateTime.now, '11a', 16, 'Ivan Ivanov', CommonConstants::YES
+    document.add_submission DateTime.now, '11a', 16, 'Ivan Ivanov', CommonConstants::YES
+    document.submissions.size.must_equal 2
+    document.submissions.must_be_instance_of Array
+  end
+
+  it "returns nil when there's no submission bu student" do
+    document.add_submission date_time, '11a', 16, 'Ivan Ivanov', CommonConstants::NO
+    document.submission_by('11a', 17).must_be_nil
+  end
 end
 
 describe BonusCodesDocument do
