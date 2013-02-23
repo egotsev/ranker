@@ -1,6 +1,6 @@
-require_relative 'document'
-require_relative 'dateutils'
-require_relative 'common_constants'
+require 'ranker/document'
+require 'ranker/dateutils'
+require 'ranker/common_constants'
 
 class TestDocument < Document
   attr_reader :date

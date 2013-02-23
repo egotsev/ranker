@@ -1,5 +1,5 @@
-require_relative 'document'
-require_relative 'common_constants'
+require 'ranker/document'
+require 'ranker/common_constants'
 
 class BonusCodesDocument < Document
   def unused_codes_number

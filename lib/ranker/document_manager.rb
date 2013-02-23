@@ -1,9 +1,9 @@
 require 'csv'
-require_relative 'homework_document'
-require_relative 'test_document'
-require_relative 'ranklist_document'
-require_relative 'bonus_codes'
-require_relative 'dateutils'
+require 'ranker/homework_document'
+require 'ranker/test_document'
+require 'ranker/ranklist_document'
+require 'ranker/bonus_codes'
+require 'ranker/dateutils'
 
 class DocumentManager
   attr_reader :homeworks, :tests, :bonus_codes_document, :ranklist_document, :submitted_bonus_codes_document

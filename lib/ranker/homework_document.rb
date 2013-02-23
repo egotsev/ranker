@@ -1,5 +1,5 @@
-require_relative 'document'
-require_relative 'dateutils'
+require 'ranker/document'
+require 'ranker/dateutils'
 
 class HomeworkDocument < Document
   attr_reader :due_date, :points

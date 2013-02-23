@@ -1,5 +1,5 @@
-require_relative 'mock-adapter/mock_session'
-require_relative 'spreadsheets-adapter/google_drive_session'
+require 'google-api-adapters/mock-adapter/mock_session'
+require 'google-api-adapters/spreadsheets-adapter/google_drive_session'
 
 class SessionFactory
   def self.create_session(username, password)

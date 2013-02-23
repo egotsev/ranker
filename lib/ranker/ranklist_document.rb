@@ -1,4 +1,4 @@
-require_relative 'document'
+require 'ranker/document'
 
 class RanklistDocument < Document
   def add_or_update_student(klass, number, name)
