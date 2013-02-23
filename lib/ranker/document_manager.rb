@@ -1,4 +1,7 @@
-require_relative 'documents'
+require_relative 'homework_document'
+require_relative 'test_document'
+require_relative 'ranklist_document'
+require_relative 'bonus_codes'
 
 class DocumentManager
   attr_reader :homeworks, :tests, :bonus_codes_document, :ranklist_document, :submitted_bonus_codes_document
