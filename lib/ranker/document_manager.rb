@@ -1,7 +1,9 @@
+require 'csv'
 require_relative 'homework_document'
 require_relative 'test_document'
 require_relative 'ranklist_document'
 require_relative 'bonus_codes'
+require_relative 'dateutils'
 
 class DocumentManager
   attr_reader :homeworks, :tests, :bonus_codes_document, :ranklist_document, :submitted_bonus_codes_document
@@ -73,7 +75,34 @@ class DocumentManager
     end
   end
 
-  def load_from_file(path)
-  
+  def serialize(path)
+    writer = CSV.open(path, 'w')
+    writer << ['RanklistDocument', @ranklist_document.url]
+    writer << ['BonusCodesDocument', @bonus_codes_document.url]
+    writer << ['SubmittedBonusCodesDocument', @submitted_bonus_codes_document.url]
+    @tests.each { |test| writer << ['TestDocument', test.url, DateUtils.date_to_string(test.date)] }
+    @homeworks.each { |homework| writer << ['HomeworkDocument', homework.url, homework.points, DateUtils.date_to_string(homework.due_date)] }
+    writer.close
+  end
+
+  def self.load_from_file(session, path)
+    document_manager = DocumentManager.new session
+    CSV.open(path, 'r') do |csv|
+      csv.each do |row|
+        case row[0]
+          when 'TestDocument'
+            document_manager.add_test_document row[1], DateUtils.string_to_date(row[2])
+          when 'HomeworkDocument'
+            document_manager.add_homework_document row[1], row[2].to_i, DateUtils.string_to_date(row[3])
+          when 'RanklistDocument'
+            document_manager.set_ranklist_document row[1]
+          when 'BonusCodesDocument'
+            document_manager.set_bonus_codes_document row[1]
+          when 'SubmittedBonusCodesDocument'
+            document_manager.set_submitted_bonus_codes_document row[1]
+        end
+      end
+    end
+    document_manager
   end
 end

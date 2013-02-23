@@ -132,7 +132,7 @@ describe DocumentManager, "functionality" do
   end
 
   it "checks test document and gives 10 points to those who has 'yes'" do
-    @document_manager.add_test_document "/url/test1", Date.new(2013,2,22)
+    @document_manager.add_test_document "/url/test1", Date.new(2013, 2, 22)
     @test1_document = @document_manager.get_test_document "/url/test1"
     @test1_document.add_submission DateTime.now, '11a', 1, "Alex A.", CommonConstants::YES
     @document_manager.check_test_results "/url/test1"
@@ -140,18 +140,46 @@ describe DocumentManager, "functionality" do
   end
 
   it "checks test document and doesn't give points to those who has 'no'" do
-    @document_manager.add_test_document "/url/test1", Date.new(2013,2,22)
+    @document_manager.add_test_document "/url/test1", Date.new(2013, 2, 22)
     @test1_document = @document_manager.get_test_document "/url/test1"
     @test1_document.add_submission DateTime.now, '11a', 1, "Alex A.", CommonConstants::NO
     @document_manager.check_test_results "/url/test1"
     @document_manager.ranklist_document.participant('11a', 1).points.must_equal 0
   end
 
-  it "initializes from file" do
-    assert false
+  it "serializes to file" do
+    @document_manager.add_test_document "/url/test1", Date.new(2013, 2, 22)
+    @document_manager.add_homework_document "/url/hw1", 6, DateTime.new(2013, 2, 20, 20, 0, 0)
+    @document_manager.serialize("store/documents.csv")
+    CSV.open("store/documents.csv") do |csv|
+      csv.each do |row|
+        case row[0]
+          when 'TestDocument'
+            row[1].must_equal "/url/test1"
+            row[2].must_equal DateUtils.date_to_string(Date.new(2013, 2, 22))
+          when 'HomeworkDocument'
+            row[1].must_equal "/url/hw1"
+            row[2].must_equal 6.to_s
+            row[3].must_equal DateUtils.date_to_string(DateTime.new(2013, 2, 20, 20, 0, 0))
+          when 'RanklistDocument'
+            row[1].must_equal "/url/ranklist"
+          when 'BonusCodesDocument'
+            row[1].must_equal "/url/bonuscodes"
+          when 'SubmittedBonusCodesDocument'
+            row[1].must_equal "/url/submittedbonuscodes"
+        end
+      end
+    end
   end
 
-  it "serializes to file" do
-    assert false
+  it "loads from file" do
+    @document_manager.add_test_document "/url/test1", Date.new(2013, 2, 22)
+    @document_manager.add_homework_document "/url/hw1", 6, DateTime.new(2013, 2, 20, 20, 0, 0)
+    @document_manager.serialize("store/documents.csv")
+    document_manager_serialization = File.open("store/documents.csv", 'rb').read
+    loaded_document_manager = DocumentManager.load_from_file(SessionFactory.create_mock_session, "store/documents.csv")
+    loaded_document_manager.serialize("store/documents.csv")
+    loaded_document_manager_serialization = File.open("store/documents.csv", 'rb').read
+    document_manager_serialization.must_equal loaded_document_manager_serialization
   end
 end
